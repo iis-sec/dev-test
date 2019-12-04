@@ -66,12 +66,12 @@ services:
       - frontendWEB3    
   dbapp2:
     image: mysql:5
-    container_name: ${NGINX_WEB:-dbapp2}
+    container_name: dbapp2
     restart: always
     volumes:
       - db-volume2:/var/lib/mysql2
-    #env_file:
-     # - moodle_variables.env
+    env_file:
+      - moodle_variables.env
     networks:
       - backendDB3
     deploy:
@@ -80,7 +80,7 @@ services:
             condition: any
   moodleapp2:
     image: iisec/devapache:apv1
-    container_name: ${NGINX_WEB:-moodleapp2}
+    container_name: moodleapp2
     links:
       - dbapp2:DB
     depends_on: 
@@ -91,8 +91,8 @@ services:
         #ports:
         #    - 80:80
         #    - 443:443
-    #env_file:
-    #  - moodle_variables.env
+    env_file:
+      - moodle_variables.env
     networks:
       - backendDB3
       - frontendWEB3

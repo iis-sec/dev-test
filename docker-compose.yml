@@ -21,7 +21,7 @@ services:
         max-size: ${NGINX_WEB_LOG_MAX_SIZE:-4m}
         max-file: ${NGINX_WEB_LOG_MAX_FILE:-10}
     networks:
-      - frontendWEB2    
+      - frontendWEB3    
 
   nginx-gen:
     image: jwilder/docker-gen
@@ -42,7 +42,7 @@ services:
         max-size: ${NGINX_GEN_LOG_MAX_SIZE:-2m}
         max-file: ${NGINX_GEN_LOG_MAX_FILE:-10}
     networks:
-      - frontendWEB2    
+      - frontendWEB3    
 
   nginx-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -63,45 +63,45 @@ services:
         max-size: ${NGINX_LETSENCRYPT_LOG_MAX_SIZE:-2m}
         max-file: ${NGINX_LETSENCRYPT_LOG_MAX_FILE:-10}
     networks:
-      - frontendWEB2    
-  dbapp:
+      - frontendWEB3    
+  dbapp2:
     image: mysql:5
     restart: always
     volumes:
-      - db-volume:/var/lib/mysql
+      - db-volume2:/var/lib/mysql2
     env_file:
       - moodle_variables.env
     networks:
-      - backendDB2
+      - backendDB3
     deploy:
         replicas: 1
         restart_policy:
             condition: any
-  moodleapp:
+  moodleapp2:
     image: iisec/devapache:apv1
     links:
-      - dbapp:DB
+      - dbapp2:DB
     depends_on: 
-      - dbapp
+      - dbapp2
     restart: always
     volumes:
-      - moodleapp-data:/var/moodledata
+      - moodleapp-data2:/var/moodledata2
         #ports:
         #    - 80:80
         #    - 443:443
     env_file:
       - moodle_variables.env
     networks:
-      - backendDB2
-      - frontendWEB2
+      - backendDB3
+      - frontendWEB23
     deploy:
         replicas: 1
         restart_policy:
             condition: any
 volumes: 
-    db-volume:
-    moodleapp-data:
+    db-volume2:
+    moodleapp-data2:
 
 networks:
-    backendDB2:
-    frontendWEB2:
+    backendDB3:
+    frontendWEB3:
